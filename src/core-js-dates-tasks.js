@@ -257,8 +257,23 @@ function getNextFridayThe13th(date) {
  * Date(2024, 5, 1) => 2
  * Date(2024, 10, 10) => 4
  */
-function getQuarter(/* date */) {
-  throw new Error('Not implemented');
+function getQuarter(date) {
+  const quarters = {
+    0: 1,
+    1: 1,
+    2: 1,
+    3: 2,
+    4: 2,
+    5: 2,
+    6: 3,
+    7: 3,
+    8: 3,
+    9: 4,
+    10: 4,
+    11: 4,
+  };
+
+  return quarters[date.getMonth()];
 }
 
 /**
@@ -279,8 +294,38 @@ function getQuarter(/* date */) {
  * { start: '01-01-2024', end: '15-01-2024' }, 1, 3 => ['01-01-2024', '05-01-2024', '09-01-2024', '13-01-2024']
  * { start: '01-01-2024', end: '10-01-2024' }, 1, 1 => ['01-01-2024', '03-01-2024', '05-01-2024', '07-01-2024', '09-01-2024']
  */
-function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
-  throw new Error('Not implemented');
+
+function fixDate(str) {
+  const [date, month, year] = str.split('-');
+  return [month, date, year].join('-');
+}
+
+function getWorkSchedule(period, countWorkDays, countOffDays) {
+  const startDateObj = new Date(fixDate(period.start));
+  const endDateObj = new Date(fixDate(period.end));
+  let isWork = true;
+  const result = [];
+  let currentSequence = countWorkDays;
+  let idx = 1;
+
+  while (startDateObj <= endDateObj) {
+    if (idx > currentSequence) {
+      isWork = !isWork;
+      currentSequence = isWork ? countWorkDays : countOffDays;
+      idx = 1;
+    }
+
+    if (isWork) {
+      result.push(
+        `${formatTimeUnit(startDateObj.getDate())}-${formatTimeUnit(startDateObj.getMonth() + 1)}-${startDateObj.getFullYear()}`
+      );
+    }
+
+    idx += 1;
+    startDateObj.setDate(startDateObj.getDate() + 1);
+  }
+
+  return result;
 }
 
 /**
