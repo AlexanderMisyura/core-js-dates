@@ -65,7 +65,7 @@ function getDayName(date) {
     'Thursday',
     'Friday',
     'Saturday',
-  ][dateObj.getDay()];
+  ][dateObj.getUTCDay()];
 }
 
 /**
@@ -85,7 +85,7 @@ function getNextFriday(date) {
   do {
     const currDate = dateObj.getDate();
     dateObj.setDate(currDate + 1);
-  } while (dateObj.getDay() !== 5);
+  } while (dateObj.getUTCDay() !== 5);
 
   return dateObj;
 }
